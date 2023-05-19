@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class ChessBoard extends JFrame implements ActionListener {
-
     static private JButton[][] boardSquares = new JButton[8][8];
     JButton w_button[][] = new JButton[1][5];
     JButton b_button[][] = new JButton[1][5];
@@ -17,7 +16,7 @@ public class ChessBoard extends JFrame implements ActionListener {
     float[][] green = new float[8][8];
     boolean w_castlel, w_castler, b_castlel, b_castler;
     int row1, col1, row2, col2;
-    int bcandef, wcandef;
+    int bcandef, wcandef,ndraw;
     static float val;
     float[][] checkmateb = new float[8][8];
     float[][] checkmatew = new float[8][8];
@@ -27,8 +26,6 @@ public class ChessBoard extends JFrame implements ActionListener {
     int[][] fisrtb = new int[8][8];
     private boolean isClick;
     private boolean isClick2;
-    int a;
-    int b;
 
     private void setClick(boolean isclick) {
         isClick = isclick;
@@ -49,8 +46,6 @@ public class ChessBoard extends JFrame implements ActionListener {
     }
 
     public ChessBoard() {
-        //count=1;
-        //count=0;
         initializeBoard();
         initializeInfoPanel();
         setSize(750, 600);
@@ -174,6 +169,7 @@ public class ChessBoard extends JFrame implements ActionListener {
         turn = true;
         bcandef = 0;
         wcandef = 0;
+        ndraw=0;
         movew = false;
         moveb = false;
         w_castlel = true;
@@ -195,12 +191,9 @@ public class ChessBoard extends JFrame implements ActionListener {
                 }
                 boardSquares[i][j] = button;
                 chessBoard.add(button);
-
-                // Set the icon white 
                 setBoard(i, j);
                 boardSquares[i][j].addActionListener(this);
             }
-
             add(chessBoard);
         }
     }
@@ -209,6 +202,7 @@ public class ChessBoard extends JFrame implements ActionListener {
         turn = !turn;
         bcandef = 0;
         wcandef = 0;
+        ndraw=0;
         if (value[7][7] != -4 || value[7][3] != -6) {
             b_castler = false;
         } else if (value[7][0] != -4 || value[7][3] != -6) {
@@ -239,43 +233,12 @@ public class ChessBoard extends JFrame implements ActionListener {
                     button.setBackground(Color.GRAY);
                 }
                 chessBoard.add(boardSquares[i][j]);
-                if (value[i][j] == 1) {
-                    boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_pawn.png")));
-                }
-                if (value[i][j] == 2) {
-                    boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_bishop.png")));
-                }
-                if (value[i][j] == 3) {
-                    boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_knight.png")));
-                }
-                if (value[i][j] == 4) {
-                    boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_rook.png")));
-                }
-                if (value[i][j] == 5) {
-                    boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_queen.png")));
-                }
+                new chessman(i,j,value[i][j],boardSquares[i][j]);
                 if (value[i][j] == 6) {
-                    boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_king.png")));
                     row1 = i;
                     col1 = j;
                 }
-                if (value[i][j] == -1) {
-                    boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_pawn.png")));
-                }
-                if (value[i][j] == -2) {
-                    boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_bishop.png")));
-                }
-                if (value[i][j] == -3) {
-                    boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_knight.png")));
-                }
-                if (value[i][j] == -4) {
-                    boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_rook.png")));
-                }
-                if (value[i][j] == -5) {
-                    boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_queen.png")));
-                }
                 if (value[i][j] == -6) {
-                    boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_king.png")));
                     row2 = i;
                     col2 = j;
                 }
@@ -293,47 +256,38 @@ public class ChessBoard extends JFrame implements ActionListener {
     private void setBoard(int i, int j) {
         if (i == 0 && (j == 0 || j == 7)) {
             value[i][j] = 4;
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_rook.png")));
         } else if (i == 0 && (j == 1 || j == 6)) {
             value[i][j] = 3;
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_knight.png")));
         } else if (i == 0 && (j == 2 || j == 5)) {
             value[i][j] = 2;
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_bishop.png")));
         } else if (i == 0 && j == 4) {
             value[i][j] = 5;
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_queen.png")));
         } else if (i == 0 && j == 3) {
             value[i][j] = 6;
             row1 = i;
             col1 = j;
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_king.png")));
         } else if (i == 1) {
             value[i][j] = 1;
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_pawn.png")));
         }
-        // Set the icon black 
-        if (i == 7 && (j == 0 || j == 7)) {
+        else if (i == 7 && (j == 0 || j == 7)) {
             value[i][j] = -4;
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_rook.png")));
         } else if (i == 7 && (j == 1 || j == 6)) {
             value[i][j] = -3;
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_knight.png")));
         } else if (i == 7 && (j == 2 || j == 5)) {
             value[i][j] = -2;
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_bishop.png")));
         } else if (i == 7 && j == 4) {
             value[i][j] = -5;
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_queen.png")));
         } else if (i == 7 && j == 3) {
             value[i][j] = -6;
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_king.png")));
         } else if (i == 6) {
             value[i][j] = -1;
             row2 = i;
             col2 = j;
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_pawn.png")));
         }
+        else {
+            value[i][j]=0;boardSquares[i][j].setIcon(null);
+        }
+        new chessman(i,j,value[i][j],boardSquares[i][j]);
     }
 
     private void setback_wpawn(int i, int j) {
@@ -382,7 +336,6 @@ public class ChessBoard extends JFrame implements ActionListener {
 
         boardSquares[m][n].addActionListener((java.awt.event.ActionEvent evt) -> {
             if (getClick2() && green[m][n] == 0.5f) {
-                boardSquares[i][j].setIcon(null);
                 settingboard();
                 if (value[i][j] == 1) {
                     value[m][n] = 1;
@@ -425,13 +378,11 @@ public class ChessBoard extends JFrame implements ActionListener {
                         value[m][n - 1] = 4;
                         value[m][n] = 6;
                         value[m][n + 2] = 0;
-                        boardSquares[m][n + 2].setIcon(null);
                     } else if (movew && n == j - 2) {
                         value[i][j] = 0;
                         value[m][n + 1] = 4;
                         value[m][n] = 6;
                         value[m][n - 1] = 0;
-                        boardSquares[m][n - 1].setIcon(null);
                     } else {
                         value[m][n] = 6;
                         value[i][j] = 0;
@@ -442,13 +393,11 @@ public class ChessBoard extends JFrame implements ActionListener {
                         value[m][n - 1] = -4;
                         value[m][n] = -6;
                         value[m][n + 2] = 0;
-                        boardSquares[m][n + 2].setIcon(null);
                     } else if (moveb && n == j - 2) {
                         value[i][j] = 0;
                         value[m][n + 1] = -4;
                         value[m][n] = -6;
                         value[m][n - 1] = 0;
-                        boardSquares[m][n - 1].setIcon(null);
                     } else {
                         value[m][n] = -6;
                         value[i][j] = 0;
@@ -457,16 +406,13 @@ public class ChessBoard extends JFrame implements ActionListener {
                 if (m == 7 && value[m][n] == 1 || m == 0 && value[m][n] == -1) {
                     value[m][n] = 10;
                     ChessBoard promotion = new ChessBoard(i, j, m, n);
-                    //value[m][n]=10;
                 }
                 updateBoard();
             } else {
                 settingboard();
             }
         });
-        //if(move){chess.setindex(i,j);}
     }
-
     private void setback_wbishop(int i, int j) {
         setClick(false);
         boardSquares[i][j].addActionListener((java.awt.event.ActionEvent evt) -> {
@@ -492,7 +438,6 @@ public class ChessBoard extends JFrame implements ActionListener {
                 }
                 m = i;
                 n = j;
-
                 while (m - 1 >= 0 && n - 1 >= 0) {
                     m--;
                     n--;
@@ -1509,6 +1454,7 @@ public class ChessBoard extends JFrame implements ActionListener {
                 playchess(i, j);
             }
         }
+        
         if (checkmateb[row2][col2] == 1 && bcandef == 0) {
             int option = JOptionPane.showOptionDialog(null, "White win!!!", "ENDGAME", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"OK"}, null);
             player1Wins = true;
@@ -1589,7 +1535,7 @@ public class ChessBoard extends JFrame implements ActionListener {
     private void settingboard() {
         for (int m = 0; m < 8; m++) {
             for (int n = 0; n < 8; n++) {
-                if (green[m][n] == 0.5f) {
+                if (green[m][n] == 0.5f||green[m][n]==-0.25f) {
                     green[m][n] = 0;
                 }
                 if ((m + n) % 2 == 0) {
@@ -1600,35 +1546,6 @@ public class ChessBoard extends JFrame implements ActionListener {
             }
         }
     }
-
-    private void setIcon(int i, int j) {
-        if (value[i][j] == 1) {
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_pawn.png")));
-        } else if (value[i][j] == 2) {
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_bishop.png")));
-        } else if (value[i][j] == 3) {
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_knight.png")));
-        } else if (value[i][j] == 4) {
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_rook.png")));
-        } else if (value[i][j] == 6) {
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_king.png")));
-        } else if (value[i][j] == 5) {
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/white_queen.png")));
-        } else if (value[i][j] == -1) {
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_pawn.png")));
-        } else if (value[i][j] == -2) {
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_bishop.png")));
-        } else if (value[i][j] == -3) {
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_knight.png")));
-        } else if (value[i][j] == -4) {
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_rook.png")));
-        } else if (value[i][j] == -6) {
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_king.png")));
-        } else if (value[i][j] == -5) {
-            boardSquares[i][j].setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/black_queen.png")));
-        }
-    }
-
     private void initializeInfoPanel() {
         JPanel infoPanel = new JPanel(new GridLayout(3, 1));
         // Đọc điểm số từ file
@@ -1658,7 +1575,6 @@ public class ChessBoard extends JFrame implements ActionListener {
         JPanel playerturn = new JPanel(new GridLayout(1, 2));
         for (int a = 0; a < 1; a++) {
             for (int b = 0; b < 2; b++) {
-
                 //tạo nút home và cài chức năng
                 if (a == 0 && b == 0) {
                     JButton homeButton = new JButton(); // Tạo nút "Quay lại"
@@ -1672,7 +1588,6 @@ public class ChessBoard extends JFrame implements ActionListener {
                         }
                     });
                     playerturn.add(homeButton);
-
                 } //tạo nút back và cài chức năng
                 else if (a == 0 && b == 1) {
                     JButton button = new JButton();
@@ -1680,17 +1595,13 @@ public class ChessBoard extends JFrame implements ActionListener {
                     button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/undo.png")));
                     playerturn.add(button);
                 }
-
                 infoPanel.add(playerturn);
             }
-
             // Add panel to the frame
             add(infoPanel, BorderLayout.EAST);
         }
-
-    
     }
-    private void bKing_run(int i, int j) {
+   private void bKing_run(int i, int j) {
         int m, n;
         if (value[i][j] == 1) {
             if (j + 1 < 8 && i + 1 < 8) {
@@ -1710,7 +1621,6 @@ public class ChessBoard extends JFrame implements ActionListener {
         } else if (value[i][j] == 2 || value[i][j] == 5) {
             m = i;
             n = j;
-
             while (m + 1 < 8 && n + 1 < 8) {
                 m++;
                 n++;
@@ -1725,9 +1635,6 @@ public class ChessBoard extends JFrame implements ActionListener {
             }
             m = i;
             n = j;
-            m = i;
-            n = j;
-
             while (m - 1 >= 0 && n - 1 >= 0) {
                 m--;
                 n--;
@@ -1824,67 +1731,77 @@ public class ChessBoard extends JFrame implements ActionListener {
             if (i + 2 < 8 && j + 1 < 8) {
                 if (value[i + 2][j + 1] >= 0) {
                     checkmateb[i + 2][j + 1] = 0.5f;
-                    if (value[i + 2][j + 1] == -6) {
+                }
+                if (value[i + 2][j + 1] == -6) {
                         checkmateb[i + 2][j + 1] = 1;
                     }
-                }
             }
             if (i + 2 < 8 && j - 1 >= 0) {
                 if (value[i + 2][j - 1] >= 0) {
                     checkmateb[i + 2][j - 1] = 0.5f;
-                    if (value[i + 2][j - 1] == -6) {
+                }
+                if (value[i + 2][j - 1] == -6) {
                         checkmateb[i + 2][j - 1] = 1;
                     }
-                }
             }
             if (i - 2 >= 0 && j + 1 < 8) {
                 if (value[i - 2][j + 1] >= 0) {
                     checkmateb[i - 2][j + 1] = 0.5f;
-                    if (value[i - 2][j + 1] == -6) {
+                }
+                if (value[i - 2][j + 1] == -6) {
                         checkmateb[i - 2][j + 1] = 1;
                     }
-                }
             }
             if (i - 2 >= 0 && j - 2 >= 0) {
                 if (value[i - 2][j - 1] >= 0) {
                     checkmateb[i - 2][j - 1] = 0.5f;
-                    if (value[i - 2][j - 1] == -6) {
+                }
+                if (value[i - 2][j - 1] == -6) {
                         checkmateb[i - 2][j - 1] = 1;
                     }
-                }
             }
             if (i + 1 < 8 && j + 2 < 8) {
                 if (value[i + 1][j + 2] >= 0) {
-                    checkmateb[i + 1][j + 2] = 0.5f;
-                    if (value[i + 1][j + 2] == -6) {
+                    checkmateb[i + 1][j + 2] = 0.5f;                    
+                }
+                if (value[i + 1][j + 2] == -6) {
                         checkmateb[i + 1][j + 2] = 1;
                     }
-                }
             }
             if (i + 1 < 8 && j - 2 >= 0) {
                 if (value[i + 1][j - 2] >= 0) {
-                    checkmateb[i + 1][j - 2] = 0.5f;
-                    if (value[i + 1][j - 2] == -6) {
+                    checkmateb[i + 1][j - 2] = 0.5f;                    
+                }
+                if (value[i + 1][j - 2] == -6) {
                         checkmateb[i + 1][j - 2] = 1;
                     }
-                }
             }
             if (i - 1 >= 0 && j - 2 >= 0) {
                 if (value[i - 1][j - 2] >= 0) {
-                    checkmateb[i - 1][j - 2] = 0.5f;
-                    if (value[i - 1][j - 2] == -6) {
+                    checkmateb[i - 1][j - 2] = 0.5f;                    
+                }
+                if (value[i - 1][j - 2] == -6) {
                         checkmateb[i - 1][j - 2] = 1;
                     }
-                }
             }
             if (i - 1 >= 0 && j + 2 < 8) {
                 if (value[i - 1][j + 2] >= 0) {
-                    checkmateb[i - 1][j + 2] = 0.5f;
-                    if (value[i - 1][j + 2] == -6) {
+                    checkmateb[i - 1][j + 2] = 0.5f;                    
+                }
+                if (value[i - 1][j + 2] == -6) {
                         checkmateb[i - 1][j + 2] = 1;
                     }
-                }
             }
+        }
+        else if(value[i][j]==-6){
+            if(i+1<8)checkmatew[i+1][j]=0.5f;
+            if(i-1<8)checkmatew[i-1][j]=0.5f;
+            if(i+1<8&&j-1>=0)checkmatew[i+1][j-1]=0.5f;
+            if(i+1<8&&j+1<8)checkmatew[i+1][j+1]=0.5f;
+            if(i-1>=0&&j+1<8)checkmatew[i-1][j+1]=0.5f;
+            if(i-1>=0&&j-1>=0)checkmatew[i-1][j-1]=0.5f;
+            if(j+1<8)checkmatew[i][j+1]=0.5f;
+            if(j-1>=0)checkmatew[i][j-1]=0.5f;
         }
     }
 
@@ -1895,13 +1812,13 @@ public class ChessBoard extends JFrame implements ActionListener {
                 if (value[i - 1][j + 1] == 6) {
                     checkmatew[i - 1][j + 1] = -1;
                 } else {
-                    checkmatew[i - 1][j + 1] = -0.5f;
+                    checkmatew[i - 1][j + 1] = -0.5f;}
                 }
-            }
             if (j - 1 >= 0 && i - 1 >= 0) {
                 if (value[i - 1][j - 1] == 6) {
                     checkmatew[i - 1][j - 1] = -1;
                 } else {
+                   if(value[i-1][i-1]>0)
                     checkmatew[i - 1][j - 1] = -0.5f;
                 }
             }
@@ -2020,70 +1937,79 @@ public class ChessBoard extends JFrame implements ActionListener {
             if (i + 2 < 8 && j + 1 < 8) {
                 if (value[i + 2][j + 1] <= 0) {
                     checkmatew[i + 2][j + 1] = -0.5f;
-                    if (value[i + 2][j + 1] == 6) {
+                }
+            if (value[i + 2][j + 1] == 6) {
                         checkmatew[i + 2][j + 1] = -1;
                     }
-                }
+            }
                 if (i + 2 < 8 && j - 1 >= 0) {
                     if (value[i + 2][j - 1] <= 0) {
                         checkmatew[i + 2][j - 1] = -0.5f;
-                        if (value[i + 2][j - 1] == 6) {
+                    }
+                    if (value[i + 2][j - 1] == 6) {
                             checkmatew[i + 2][j - 1] = -1;
                         }
-                    }
                 }
                 if (i - 2 >= 0 && j + 1 < 8) {
                     if (value[i - 2][j + 1] <= 0) {
                         checkmatew[i - 2][j + 1] = -0.5f;
-                        if (value[i - 2][j + 1] == 6) {
+                    }
+                 if (value[i - 2][j + 1] == 6) {
                             checkmatew[i - 2][j + 1] = -1;
                         }
-                    }
                 }
                 if (i - 2 >= 0 && j - 1 >= 0) {
                     if (value[i - 2][j - 1] <= 0) {
                         checkmatew[i - 2][j - 1] = -0.5f;
-                        if (value[i - 2][j - 1] == 6) {
+                    }
+                    if (value[i - 2][j - 1] == 6) {
                             checkmatew[i - 2][j - 1] = -1;
                         }
-                    }
                 }
                 if (i + 1 < 8 && j + 2 < 8) {
                     if (value[i + 1][j + 2] <= 0) {
                         checkmatew[i + 1][j + 2] = -0.5f;
-                        if (value[i + 1][j + 2] == 6) {
+                    }
+                    if (value[i + 1][j + 2] == 6) {
                             checkmatew[i + 1][j + 2] = -1;
                         }
-                    }
                 }
                 if (i + 1 < 8 && j - 2 >= 0) {
                     if (value[i + 1][j - 2] <= 0) {
                         checkmatew[i + 1][j - 2] = -0.5f;
-                        if (value[i + 1][j - 2] == 6) {
+                    }
+                    if (value[i + 1][j - 2] == 6) {
                             checkmatew[i + 1][j - 2] = -1;
                         }
-                    }
                 }
                 if (i - 1 >= 0 && j - 2 >= 0) {
                     if (value[i - 1][j - 2] <= 0) {
                         checkmatew[i - 1][j - 2] = -0.5f;
-                        if (value[i - 1][j - 2] == 6) {
+                    }
+                    if (value[i - 1][j - 2] == 6) {
                             checkmatew[i - 1][j - 2] = -1;
                         }
-                    }
                 }
                 if (i - 1 >= 0 && j + 2 < 8) {
                     if (value[i - 1][j + 2] <= 0) {
-                        checkmatew[i - 1][j + 2] = -0.5f;
-                        if (value[i - 1][j + 2] == 6) {
+                        checkmatew[i - 1][j + 2] = -0.5f;                       
+                    }
+                    if (value[i - 1][j + 2] == 6) {
                             checkmatew[i - 1][j + 2] = -1;
                         }
-                    }
                 }
             }
+        else if(value[i][j]==-6){
+            if(i+1<8)checkmatew[i+1][j]=-0.5f;
+            if(i-1<8)checkmatew[i-1][j]=-0.5f;
+            if(i+1<8&&j-1>=0)checkmatew[i+1][j-1]=-0.5f;
+            if(i+1<8&&j+1<8)checkmatew[i+1][j+1]=-0.5f;
+            if(i-1>=0&&j+1<8)checkmatew[i-1][j+1]=-0.5f;
+            if(i-1>=0&&j-1>=0)checkmatew[i-1][j-1]=-0.5f;
+            if(j+1<8)checkmatew[i][j+1]=-0.5f;
+            if(j-1>=0)checkmatew[i][j-1]=-0.5f;
         }
-    }
-
+        }
     private void bcan_Def(int i, int j) {
         float p, q;
         int m, n;
