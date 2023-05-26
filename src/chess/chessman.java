@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package chess;
-
 import javax.swing.JButton;
 
 /**
@@ -11,6 +10,8 @@ import javax.swing.JButton;
  * @author Admin
  */
 public class chessman {
+    public static int player1Score=0;
+    public static int player2Score=0;
     float val;
     JButton boardSquare;
     public chessman(int i,int j,float value,JButton boardSquares) {

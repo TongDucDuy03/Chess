@@ -4,7 +4,6 @@
  */
 package chess;
 
-import chess.ChessBoard;
 import javax.swing.JOptionPane;
 /**
  *

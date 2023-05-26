@@ -23,7 +23,9 @@ public class Server extends Login{
             // Khởi tạo luồng đầu vào và đầu ra để giao tiếp với máy khách
             inputStream = new ObjectInputStream(clientSocket.getInputStream());
             outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-
+            Login login = new Login(); // Tạo đối tượng Login
+                outputStream.writeObject(login);
+                outputStream.flush();
             // Xử lý yêu cầu từ máy khách
             handleClientRequests();
 
@@ -73,7 +75,6 @@ public class Server extends Login{
     }
 
     public static void main(String[] args) {
-        new Login().setVisible(true); ;
         Server server = new Server();
         server.start(1232);
     }

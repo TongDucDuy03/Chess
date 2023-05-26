@@ -1,5 +1,6 @@
 package chess;
-
+import static chess.chessman.player1Score;
+import static chess.chessman.player2Score;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileReader;
@@ -1446,9 +1447,6 @@ public class ChessBoard extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        boolean player1Wins = true;
-        int player1Score = 0;
-        int player2Score = 0;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 playchess(i, j);
@@ -1457,11 +1455,11 @@ public class ChessBoard extends JFrame implements ActionListener {
         
         if (checkmateb[row2][col2] == 1 && bcandef == 0) {
             int option = JOptionPane.showOptionDialog(null, "White win!!!", "ENDGAME", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"OK"}, null);
-            player1Wins = true;
+            //player1Wins = true;
             if (option == JOptionPane.OK_OPTION) {
                 // Nút "OK" được nhấn
                 new ChessBoard().setVisible(true);
-                player1Wins = true;
+                player1Score++;
                 dispose();
             }
         }
@@ -1470,17 +1468,10 @@ public class ChessBoard extends JFrame implements ActionListener {
             if (option == JOptionPane.OK_OPTION) {
                 // Nút "OK" được nhấn
                 new ChessBoard().setVisible(true);
-                player1Wins = false;
+                player2Score++;
                 dispose();
             }
         }
-        if (player1Wins) {
-            player1Score++;
-        } else {
-            player2Score++;
-        }
-
-        // Ghi kết quả vào file
         try {
             FileWriter writer = new FileWriter("ketqua.txt");
             writer.write( player1Score + "-" + player2Score);
