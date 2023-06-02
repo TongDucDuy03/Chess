@@ -35,7 +35,6 @@ public class Home extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(400, 600));
         setSize(new java.awt.Dimension(0, 0));
         getContentPane().setLayout(null);
 
@@ -77,8 +76,6 @@ public class Home extends javax.swing.JFrame {
         });
         getContentPane().add(jButton3);
         jButton3.setBounds(130, 300, 129, 42);
-
-        jLabel2.setText("jLabel2");
         getContentPane().add(jLabel2);
         jLabel2.setBounds(0, 0, 400, 610);
 
@@ -88,7 +85,7 @@ public class Home extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         new rule().setVisible(true);
-        dispose();//xoa trang trước
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

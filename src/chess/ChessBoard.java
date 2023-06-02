@@ -1,4 +1,5 @@
 package chess;
+
 import static chess.chessman.player1Score;
 import static chess.chessman.player2Score;
 import java.awt.*;
@@ -8,8 +9,11 @@ import javax.swing.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class ChessBoard extends JFrame implements ActionListener {
+
     static private JButton[][] boardSquares = new JButton[8][8];
     JButton w_button[][] = new JButton[1][5];
     JButton b_button[][] = new JButton[1][5];
@@ -17,7 +21,7 @@ public class ChessBoard extends JFrame implements ActionListener {
     float[][] green = new float[8][8];
     boolean w_castlel, w_castler, b_castlel, b_castler;
     int row1, col1, row2, col2;
-    int bcandef, wcandef,ndraw;
+    int bcandef, wcandef, ndraw;
     static float val;
     float[][] checkmateb = new float[8][8];
     float[][] checkmatew = new float[8][8];
@@ -170,7 +174,7 @@ public class ChessBoard extends JFrame implements ActionListener {
         turn = true;
         bcandef = 0;
         wcandef = 0;
-        ndraw=0;
+        ndraw = 0;
         movew = false;
         moveb = false;
         w_castlel = true;
@@ -203,7 +207,7 @@ public class ChessBoard extends JFrame implements ActionListener {
         turn = !turn;
         bcandef = 0;
         wcandef = 0;
-        ndraw=0;
+        ndraw = 0;
         if (value[7][7] != -4 || value[7][3] != -6) {
             b_castler = false;
         } else if (value[7][0] != -4 || value[7][3] != -6) {
@@ -234,7 +238,7 @@ public class ChessBoard extends JFrame implements ActionListener {
                     button.setBackground(Color.GRAY);
                 }
                 chessBoard.add(boardSquares[i][j]);
-                new chessman(i,j,value[i][j],boardSquares[i][j]);
+                new chessman(i, j, value[i][j], boardSquares[i][j]);
                 if (value[i][j] == 6) {
                     row1 = i;
                     col1 = j;
@@ -269,8 +273,7 @@ public class ChessBoard extends JFrame implements ActionListener {
             col1 = j;
         } else if (i == 1) {
             value[i][j] = 1;
-        }
-        else if (i == 7 && (j == 0 || j == 7)) {
+        } else if (i == 7 && (j == 0 || j == 7)) {
             value[i][j] = -4;
         } else if (i == 7 && (j == 1 || j == 6)) {
             value[i][j] = -3;
@@ -284,11 +287,11 @@ public class ChessBoard extends JFrame implements ActionListener {
             value[i][j] = -1;
             row2 = i;
             col2 = j;
+        } else {
+            value[i][j] = 0;
+            boardSquares[i][j].setIcon(null);
         }
-        else {
-            value[i][j]=0;boardSquares[i][j].setIcon(null);
-        }
-        new chessman(i,j,value[i][j],boardSquares[i][j]);
+        new chessman(i, j, value[i][j], boardSquares[i][j]);
     }
 
     private void setback_wpawn(int i, int j) {
@@ -414,6 +417,7 @@ public class ChessBoard extends JFrame implements ActionListener {
             }
         });
     }
+
     private void setback_wbishop(int i, int j) {
         setClick(false);
         boardSquares[i][j].addActionListener((java.awt.event.ActionEvent evt) -> {
@@ -1452,7 +1456,7 @@ public class ChessBoard extends JFrame implements ActionListener {
                 playchess(i, j);
             }
         }
-        
+
         if (checkmateb[row2][col2] == 1 && bcandef == 0) {
             int option = JOptionPane.showOptionDialog(null, "White win!!!", "ENDGAME", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"OK"}, null);
             //player1Wins = true;
@@ -1474,7 +1478,7 @@ public class ChessBoard extends JFrame implements ActionListener {
         }
         try {
             FileWriter writer = new FileWriter("ketqua.txt");
-            writer.write( player1Score + "-" + player2Score);
+            writer.write(player1Score + "-" + player2Score);
             writer.close();
             System.out.println("Kết quả đã được lưu vào file 'ketqua.txt'");
         } catch (IOException event) {
@@ -1526,7 +1530,7 @@ public class ChessBoard extends JFrame implements ActionListener {
     private void settingboard() {
         for (int m = 0; m < 8; m++) {
             for (int n = 0; n < 8; n++) {
-                if (green[m][n] == 0.5f||green[m][n]==-0.25f) {
+                if (green[m][n] == 0.5f || green[m][n] == -0.25f) {
                     green[m][n] = 0;
                 }
                 if ((m + n) % 2 == 0) {
@@ -1537,8 +1541,9 @@ public class ChessBoard extends JFrame implements ActionListener {
             }
         }
     }
+
     private void initializeInfoPanel() {
-        JPanel infoPanel = new JPanel(new GridLayout(3, 1));
+        JPanel infoPanel = new JPanel(new GridLayout(4, 1));
         // Đọc điểm số từ file
         try (Scanner scanner = new Scanner(new FileReader("ketqua.txt"))) {
             String scoreLine = scanner.nextLine();
@@ -1559,40 +1564,211 @@ public class ChessBoard extends JFrame implements ActionListener {
             System.out.println("Định dạng số không hợp lệ");
         }
 
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 1; j++) {
+                // Add player labels
+                if (i == 0 && j == 0) {
+                    Object[][] data = {
+                        {"Score", "1"},
+                        {"1"}
+
+                    };
+
+                    // Định danh cột
+                    String[] columnNames = {"Player 1"};
+
+                    // Tạo một lớp AbstractTableModel tùy chỉnh
+                    AbstractTableModel model = new AbstractTableModel() {
+                        public int getColumnCount() {
+                            return columnNames.length;
+                        }
+
+                        public int getRowCount() {
+                            return data.length;
+                        }
+
+                        public Object getValueAt(int row, int col) {
+                            return data[row][col];
+                        }
+
+                        public String getColumnName(int col) {
+                            return columnNames[col];
+                        }
+
+                        public boolean isCellEditable(int row, int col) {
+                            return false; // Ngăn không cho người dùng chỉnh sửa dữ liệu
+                        }
+                    };
+
+                    // Tạo bảng với DefaultTableModel
+                    JTable table = new JTable(model);
+
+                    table.setRowHeight(55);
+
+                    // Căn chỉnh dữ liệu trong cột 1 về trung tâm
+                    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+                    centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+                    table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+
+                    // Tăng kích cỡ chữ trong bảng
+                    Font font = table.getFont().deriveFont(Font.BOLD, 40); // Thiết lập font chữ và kích cỡ
+                    table.setFont(font);
+
+                    // Đặt bảng vào một thanh cuộn
+                    JScrollPane scrollPane = new JScrollPane(table);
+
+                    // Đặt thanh cuộn vào panel
+                    infoPanel.add(scrollPane);
+
+                }
+                if (i == 1 && j == 0) {
+                    Object[][] data = {
+                        {"Score"},
+                        {"1"}
+
+                    };
+
+                    // Định danh cột
+                    String[] columnNames = {"Player 2"};
+
+                    AbstractTableModel model = new AbstractTableModel() {
+                        public int getColumnCount() {
+                            return columnNames.length;
+                        }
+
+                        public int getRowCount() {
+                            return data.length;
+                        }
+
+                        public Object getValueAt(int row, int col) {
+                            return data[row][col];
+                        }
+
+                        public String getColumnName(int col) {
+                            return columnNames[col];
+                        }
+
+                        public boolean isCellEditable(int row, int col) {
+                            return false; // Ngăn không cho người dùng chỉnh sửa dữ liệu
+                        }
+                    };
+
+                    // Tạo bảng với DefaultTableModel
+                    JTable table = new JTable(model);
+
+                    table.setRowHeight(55);
+
+                    // Căn chỉnh dữ liệu trong cột 1 về trung tâm
+                    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+                    centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+                    table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+
+                    // Tăng kích cỡ chữ trong bảng
+                    Font font = table.getFont().deriveFont(Font.BOLD, 40); // Thiết lập font chữ và kích cỡ
+                    table.setFont(font);
+
+                    // Đặt bảng vào một thanh cuộn
+                    JScrollPane scrollPane = new JScrollPane(table);
+
+                    // Đặt thanh cuộn vào panel
+                    infoPanel.add(scrollPane);
+
+                }
+                // Add turn indicator
+                if (i == 2 && j == 0) {
+
+                }
+
+                if (i == 3 && j == 0) {
+                    // tạo nút home và undo
+                    JPanel playerturn = new JPanel(new GridLayout(1, 2));
+                    for (int a = 0; a < 1; a++) {
+                        for (int b = 0; b < 2; b++) {
+
+                            //tạo nút home và cài chức năng
+                            if (a == 0 && b == 0) {
+                                JButton homeButton = new JButton(); // Tạo nút "Quay lại"
+                                homeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/home.png")));
+                                homeButton.setBackground(Color.WHITE);
+                                homeButton.addActionListener(new ActionListener() {
+                                    public void actionPerformed(ActionEvent e) {
+                                        int option = JOptionPane.showOptionDialog(null, "Bạn có muốn tiếp tục?", "Lựa chọn", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+
+                                        if (option == JOptionPane.YES_OPTION) {
+                                            return;
+                                        } else if (option == JOptionPane.NO_OPTION) {
+                                            Home mainscreen = new Home(); // Tạo một đối tượng Home
+                                            mainscreen.setVisible(true); // Hiển thị Home
+                                            dispose(); // Đóng DetailFrame hiện tại 
+
+                                        } else {
+                                            System.out.println("Bạn đã đóng hộp thoại");
+                                        }
+
+                                    }
+                                });
+                                playerturn.add(homeButton);
+
+                            } //tạo nút back và cài chức năng
+                            else if (a == 0 && b == 1) {
+                                JButton button = new JButton();
+                                button.setBackground(Color.WHITE);
+                                button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/new.png")));
+
+                                button.addActionListener(new ActionListener() {
+                                    public void actionPerformed(ActionEvent e) {
+                                        // Mảng chứa danh sách các chức năng
+                                        String[] options = {"Quay lại game", "luật chơi", "Tắt nhạc"};
+
+                                        // Hiển thị hộp thoại lựa chọn chức năng
+                                        int choice = JOptionPane.showOptionDialog(
+                                                null,// Cửa sổ cha, null để sử dụng cửa sổ mặc định
+                                                "Chọn một chức năng:", // Nội dung thông báo
+                                                "Lựa chọn chức năng", // Tiêu đề hộp thoại
+                                                JOptionPane.DEFAULT_OPTION, // Kiểu nút mặc định
+                                                JOptionPane.PLAIN_MESSAGE, // Kiểu thông báo
+                                                null, // Icon
+                                                options, // Mảng chứa các tùy chọn
+                                                options[0] // Tùy chọn mặc định
+                                        );
+
+                                        // Kiểm tra lựa chọn của người dùng
+                                        if (choice == 0) {
+                                            String selectedOption = options[choice];
+
+                                        } else {
+                                            if (choice == 1) {
+
+                                                rule luat = new rule();
+                                                luat.setVisible(true);
+
+                                            } else if (choice == 2) {
+                                                JOptionPane.showMessageDialog(null, "Đã tắt nhạc", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                                            }
+                                        }
+
+                                    }
+
+                                });
+                                playerturn.add(button);
+                            }
+
+                            infoPanel.add(playerturn);
+                        }
+                    }
+                }
+            }
+        }
+
         // Set panel properties
         infoPanel.setPreferredSize(new Dimension(150, 600));
         infoPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        JPanel playerturn = new JPanel(new GridLayout(1, 2));
-        for (int a = 0; a < 1; a++) {
-            for (int b = 0; b < 2; b++) {
-                //tạo nút home và cài chức năng
-                if (a == 0 && b == 0) {
-                    JButton homeButton = new JButton(); // Tạo nút "Quay lại"
-                    homeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home.png")));
-                    homeButton.setBackground(Color.WHITE);
-                    homeButton.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            Home mainscreen = new Home(); // Tạo một đối tượng Home
-                            mainscreen.setVisible(true); // Hiển thị Home
-                            dispose(); // Đóng DetailFrame hiện tại
-                        }
-                    });
-                    playerturn.add(homeButton);
-                } //tạo nút back và cài chức năng
-                else if (a == 0 && b == 1) {
-                    JButton button = new JButton();
-                    button.setBackground(Color.WHITE);
-                    button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/undo.png")));
-                    playerturn.add(button);
-                }
-                infoPanel.add(playerturn);
-            }
-            // Add panel to the frame
-            add(infoPanel, BorderLayout.EAST);
-        }
+        // Add panel to the frame
+        add(infoPanel, BorderLayout.EAST);
     }
-   private void bKing_run(int i, int j) {
+
+    private void bKing_run(int i, int j) {
         int m, n;
         if (value[i][j] == 1) {
             if (j + 1 < 8 && i + 1 < 8) {
@@ -1724,75 +1900,90 @@ public class ChessBoard extends JFrame implements ActionListener {
                     checkmateb[i + 2][j + 1] = 0.5f;
                 }
                 if (value[i + 2][j + 1] == -6) {
-                        checkmateb[i + 2][j + 1] = 1;
-                    }
+                    checkmateb[i + 2][j + 1] = 1;
+                }
             }
             if (i + 2 < 8 && j - 1 >= 0) {
                 if (value[i + 2][j - 1] >= 0) {
                     checkmateb[i + 2][j - 1] = 0.5f;
                 }
                 if (value[i + 2][j - 1] == -6) {
-                        checkmateb[i + 2][j - 1] = 1;
-                    }
+                    checkmateb[i + 2][j - 1] = 1;
+                }
             }
             if (i - 2 >= 0 && j + 1 < 8) {
                 if (value[i - 2][j + 1] >= 0) {
                     checkmateb[i - 2][j + 1] = 0.5f;
                 }
                 if (value[i - 2][j + 1] == -6) {
-                        checkmateb[i - 2][j + 1] = 1;
-                    }
+                    checkmateb[i - 2][j + 1] = 1;
+                }
             }
             if (i - 2 >= 0 && j - 2 >= 0) {
                 if (value[i - 2][j - 1] >= 0) {
                     checkmateb[i - 2][j - 1] = 0.5f;
                 }
                 if (value[i - 2][j - 1] == -6) {
-                        checkmateb[i - 2][j - 1] = 1;
-                    }
+                    checkmateb[i - 2][j - 1] = 1;
+                }
             }
             if (i + 1 < 8 && j + 2 < 8) {
                 if (value[i + 1][j + 2] >= 0) {
-                    checkmateb[i + 1][j + 2] = 0.5f;                    
+                    checkmateb[i + 1][j + 2] = 0.5f;
                 }
                 if (value[i + 1][j + 2] == -6) {
-                        checkmateb[i + 1][j + 2] = 1;
-                    }
+                    checkmateb[i + 1][j + 2] = 1;
+                }
             }
             if (i + 1 < 8 && j - 2 >= 0) {
                 if (value[i + 1][j - 2] >= 0) {
-                    checkmateb[i + 1][j - 2] = 0.5f;                    
+                    checkmateb[i + 1][j - 2] = 0.5f;
                 }
                 if (value[i + 1][j - 2] == -6) {
-                        checkmateb[i + 1][j - 2] = 1;
-                    }
+                    checkmateb[i + 1][j - 2] = 1;
+                }
             }
             if (i - 1 >= 0 && j - 2 >= 0) {
                 if (value[i - 1][j - 2] >= 0) {
-                    checkmateb[i - 1][j - 2] = 0.5f;                    
+                    checkmateb[i - 1][j - 2] = 0.5f;
                 }
                 if (value[i - 1][j - 2] == -6) {
-                        checkmateb[i - 1][j - 2] = 1;
-                    }
+                    checkmateb[i - 1][j - 2] = 1;
+                }
             }
             if (i - 1 >= 0 && j + 2 < 8) {
                 if (value[i - 1][j + 2] >= 0) {
-                    checkmateb[i - 1][j + 2] = 0.5f;                    
+                    checkmateb[i - 1][j + 2] = 0.5f;
                 }
                 if (value[i - 1][j + 2] == -6) {
-                        checkmateb[i - 1][j + 2] = 1;
-                    }
+                    checkmateb[i - 1][j + 2] = 1;
+                }
             }
-        }
-        else if(value[i][j]==-6){
-            if(i+1<8)checkmatew[i+1][j]=0.5f;
-            if(i-1<8)checkmatew[i-1][j]=0.5f;
-            if(i+1<8&&j-1>=0)checkmatew[i+1][j-1]=0.5f;
-            if(i+1<8&&j+1<8)checkmatew[i+1][j+1]=0.5f;
-            if(i-1>=0&&j+1<8)checkmatew[i-1][j+1]=0.5f;
-            if(i-1>=0&&j-1>=0)checkmatew[i-1][j-1]=0.5f;
-            if(j+1<8)checkmatew[i][j+1]=0.5f;
-            if(j-1>=0)checkmatew[i][j-1]=0.5f;
+        } else if (value[i][j] == -6) {
+            if (i + 1 < 8) {
+                checkmatew[i + 1][j] = 0.5f;
+            }
+            if (i - 1 < 8) {
+                checkmatew[i - 1][j] = 0.5f;
+            }
+            if (i + 1 < 8 && j - 1 >= 0) {
+                checkmatew[i + 1][j - 1] = 0.5f;
+            }
+            if (i + 1 < 8 && j + 1 < 8) {
+                checkmatew[i + 1][j + 1] = 0.5f;
+            }
+            if (i - 1 >= 0 && j + 1 < 8) {
+                checkmatew[i - 1][j + 1] = 0.5f;
+            }
+            if (i - 1 >= 0 && j - 1 >= 0) {
+                checkmatew[i - 1][j - 1] = 0.5f;
+            }
+            if (j + 1 < 8) {
+                checkmatew[i][j + 1] = 0.5f;
+            }
+            if (j - 1 >= 0) {
+                checkmatew[i][j - 1] = 0.5f;
+            }
         }
     }
 
@@ -1803,14 +1994,16 @@ public class ChessBoard extends JFrame implements ActionListener {
                 if (value[i - 1][j + 1] == 6) {
                     checkmatew[i - 1][j + 1] = -1;
                 } else {
-                    checkmatew[i - 1][j + 1] = -0.5f;}
+                    checkmatew[i - 1][j + 1] = -0.5f;
                 }
+            }
             if (j - 1 >= 0 && i - 1 >= 0) {
                 if (value[i - 1][j - 1] == 6) {
                     checkmatew[i - 1][j - 1] = -1;
                 } else {
-                   if(value[i-1][i-1]>0)
-                    checkmatew[i - 1][j - 1] = -0.5f;
+                    if (value[i - 1][i - 1] > 0) {
+                        checkmatew[i - 1][j - 1] = -0.5f;
+                    }
                 }
             }
         }
@@ -1929,78 +2122,94 @@ public class ChessBoard extends JFrame implements ActionListener {
                 if (value[i + 2][j + 1] <= 0) {
                     checkmatew[i + 2][j + 1] = -0.5f;
                 }
-            if (value[i + 2][j + 1] == 6) {
-                        checkmatew[i + 2][j + 1] = -1;
-                    }
-            }
-                if (i + 2 < 8 && j - 1 >= 0) {
-                    if (value[i + 2][j - 1] <= 0) {
-                        checkmatew[i + 2][j - 1] = -0.5f;
-                    }
-                    if (value[i + 2][j - 1] == 6) {
-                            checkmatew[i + 2][j - 1] = -1;
-                        }
-                }
-                if (i - 2 >= 0 && j + 1 < 8) {
-                    if (value[i - 2][j + 1] <= 0) {
-                        checkmatew[i - 2][j + 1] = -0.5f;
-                    }
-                 if (value[i - 2][j + 1] == 6) {
-                            checkmatew[i - 2][j + 1] = -1;
-                        }
-                }
-                if (i - 2 >= 0 && j - 1 >= 0) {
-                    if (value[i - 2][j - 1] <= 0) {
-                        checkmatew[i - 2][j - 1] = -0.5f;
-                    }
-                    if (value[i - 2][j - 1] == 6) {
-                            checkmatew[i - 2][j - 1] = -1;
-                        }
-                }
-                if (i + 1 < 8 && j + 2 < 8) {
-                    if (value[i + 1][j + 2] <= 0) {
-                        checkmatew[i + 1][j + 2] = -0.5f;
-                    }
-                    if (value[i + 1][j + 2] == 6) {
-                            checkmatew[i + 1][j + 2] = -1;
-                        }
-                }
-                if (i + 1 < 8 && j - 2 >= 0) {
-                    if (value[i + 1][j - 2] <= 0) {
-                        checkmatew[i + 1][j - 2] = -0.5f;
-                    }
-                    if (value[i + 1][j - 2] == 6) {
-                            checkmatew[i + 1][j - 2] = -1;
-                        }
-                }
-                if (i - 1 >= 0 && j - 2 >= 0) {
-                    if (value[i - 1][j - 2] <= 0) {
-                        checkmatew[i - 1][j - 2] = -0.5f;
-                    }
-                    if (value[i - 1][j - 2] == 6) {
-                            checkmatew[i - 1][j - 2] = -1;
-                        }
-                }
-                if (i - 1 >= 0 && j + 2 < 8) {
-                    if (value[i - 1][j + 2] <= 0) {
-                        checkmatew[i - 1][j + 2] = -0.5f;                       
-                    }
-                    if (value[i - 1][j + 2] == 6) {
-                            checkmatew[i - 1][j + 2] = -1;
-                        }
+                if (value[i + 2][j + 1] == 6) {
+                    checkmatew[i + 2][j + 1] = -1;
                 }
             }
-        else if(value[i][j]==-6){
-            if(i+1<8)checkmatew[i+1][j]=-0.5f;
-            if(i-1<8)checkmatew[i-1][j]=-0.5f;
-            if(i+1<8&&j-1>=0)checkmatew[i+1][j-1]=-0.5f;
-            if(i+1<8&&j+1<8)checkmatew[i+1][j+1]=-0.5f;
-            if(i-1>=0&&j+1<8)checkmatew[i-1][j+1]=-0.5f;
-            if(i-1>=0&&j-1>=0)checkmatew[i-1][j-1]=-0.5f;
-            if(j+1<8)checkmatew[i][j+1]=-0.5f;
-            if(j-1>=0)checkmatew[i][j-1]=-0.5f;
+            if (i + 2 < 8 && j - 1 >= 0) {
+                if (value[i + 2][j - 1] <= 0) {
+                    checkmatew[i + 2][j - 1] = -0.5f;
+                }
+                if (value[i + 2][j - 1] == 6) {
+                    checkmatew[i + 2][j - 1] = -1;
+                }
+            }
+            if (i - 2 >= 0 && j + 1 < 8) {
+                if (value[i - 2][j + 1] <= 0) {
+                    checkmatew[i - 2][j + 1] = -0.5f;
+                }
+                if (value[i - 2][j + 1] == 6) {
+                    checkmatew[i - 2][j + 1] = -1;
+                }
+            }
+            if (i - 2 >= 0 && j - 1 >= 0) {
+                if (value[i - 2][j - 1] <= 0) {
+                    checkmatew[i - 2][j - 1] = -0.5f;
+                }
+                if (value[i - 2][j - 1] == 6) {
+                    checkmatew[i - 2][j - 1] = -1;
+                }
+            }
+            if (i + 1 < 8 && j + 2 < 8) {
+                if (value[i + 1][j + 2] <= 0) {
+                    checkmatew[i + 1][j + 2] = -0.5f;
+                }
+                if (value[i + 1][j + 2] == 6) {
+                    checkmatew[i + 1][j + 2] = -1;
+                }
+            }
+            if (i + 1 < 8 && j - 2 >= 0) {
+                if (value[i + 1][j - 2] <= 0) {
+                    checkmatew[i + 1][j - 2] = -0.5f;
+                }
+                if (value[i + 1][j - 2] == 6) {
+                    checkmatew[i + 1][j - 2] = -1;
+                }
+            }
+            if (i - 1 >= 0 && j - 2 >= 0) {
+                if (value[i - 1][j - 2] <= 0) {
+                    checkmatew[i - 1][j - 2] = -0.5f;
+                }
+                if (value[i - 1][j - 2] == 6) {
+                    checkmatew[i - 1][j - 2] = -1;
+                }
+            }
+            if (i - 1 >= 0 && j + 2 < 8) {
+                if (value[i - 1][j + 2] <= 0) {
+                    checkmatew[i - 1][j + 2] = -0.5f;
+                }
+                if (value[i - 1][j + 2] == 6) {
+                    checkmatew[i - 1][j + 2] = -1;
+                }
+            }
+        } else if (value[i][j] == -6) {
+            if (i + 1 < 8) {
+                checkmatew[i + 1][j] = -0.5f;
+            }
+            if (i - 1 < 8) {
+                checkmatew[i - 1][j] = -0.5f;
+            }
+            if (i + 1 < 8 && j - 1 >= 0) {
+                checkmatew[i + 1][j - 1] = -0.5f;
+            }
+            if (i + 1 < 8 && j + 1 < 8) {
+                checkmatew[i + 1][j + 1] = -0.5f;
+            }
+            if (i - 1 >= 0 && j + 1 < 8) {
+                checkmatew[i - 1][j + 1] = -0.5f;
+            }
+            if (i - 1 >= 0 && j - 1 >= 0) {
+                checkmatew[i - 1][j - 1] = -0.5f;
+            }
+            if (j + 1 < 8) {
+                checkmatew[i][j + 1] = -0.5f;
+            }
+            if (j - 1 >= 0) {
+                checkmatew[i][j - 1] = -0.5f;
+            }
         }
-        }
+    }
+
     private void bcan_Def(int i, int j) {
         float p, q;
         int m, n;
