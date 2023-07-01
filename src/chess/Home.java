@@ -35,6 +35,7 @@ public class Home extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(400, 600));
         setSize(new java.awt.Dimension(0, 0));
         getContentPane().setLayout(null);
 
@@ -76,6 +77,8 @@ public class Home extends javax.swing.JFrame {
         });
         getContentPane().add(jButton3);
         jButton3.setBounds(130, 300, 129, 42);
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Login.jpg"))); // NOI18N
         getContentPane().add(jLabel2);
         jLabel2.setBounds(0, 0, 400, 610);
 

@@ -8,9 +8,12 @@ import java.io.FileReader;
 import javax.swing.*;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 public class ChessBoard extends JFrame implements ActionListener {
 
@@ -1458,6 +1461,7 @@ public class ChessBoard extends JFrame implements ActionListener {
         }
 
         if (checkmateb[row2][col2] == 1 && bcandef == 0) {
+            
             int option = JOptionPane.showOptionDialog(null, "White win!!!", "ENDGAME", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"OK"}, null);
             //player1Wins = true;
             if (option == JOptionPane.OK_OPTION) {
@@ -1552,25 +1556,13 @@ public class ChessBoard extends JFrame implements ActionListener {
             int player2Score = Integer.parseInt(scores[1].trim());
 
             // Hiển thị điểm số trong infoPanel
-            JLabel player1ScoreLabel = new JLabel("Player 1: " + player1Score);
-            JLabel player2ScoreLabel = new JLabel("Player 2: " + player2Score);
-            infoPanel.add(player1ScoreLabel);
-            infoPanel.add(player2ScoreLabel);
-        } catch (IOException e) {
-            // Xử lý nếu không thể đọc từ file
-            System.out.println("Không thể đọc từ file");
-        } catch (NumberFormatException e) {
-            // Xử lý nếu không thể chuyển đổi chuỗi thành số nguyên
-            System.out.println("Định dạng số không hợp lệ");
-        }
-
-        for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 1; j++) {
                 // Add player labels
                 if (i == 0 && j == 0) {
                     Object[][] data = {
-                        {"Score", "1"},
-                        {"1"}
+                        {"Score"},
+                        {player1Score}
 
                     };
 
@@ -1624,7 +1616,7 @@ public class ChessBoard extends JFrame implements ActionListener {
                 if (i == 1 && j == 0) {
                     Object[][] data = {
                         {"Score"},
-                        {"1"}
+                        {player2Score}
 
                     };
 
@@ -1676,6 +1668,26 @@ public class ChessBoard extends JFrame implements ActionListener {
                 }
                 // Add turn indicator
                 if (i == 2 && j == 0) {
+                  String[] columnNames = {"Thời gian"};
+    DefaultTableModel tableModel = new DefaultTableModel(columnNames, 1);
+    JTable table = new JTable(tableModel);
+    table.setRowHeight(55);
+    Clock time = new Clock(1, 0, 0);
+    time.decr();
+              
+    
+    
+    
+
+    // Cập nhật giá trị trong ô bảng
+    tableModel.setValueAt(time.toString(), 0, 0);
+
+    // Đặt bảng vào một thanh cuộn
+    JScrollPane scrollPane = new JScrollPane(table);
+
+    infoPanel.add(scrollPane);
+
+
 
                 }
 
@@ -1759,7 +1771,15 @@ public class ChessBoard extends JFrame implements ActionListener {
                 }
             }
         }
+        } catch (IOException e) {
+            // Xử lý nếu không thể đọc từ file
+            System.out.println("Không thể đọc từ file");
+        } catch (NumberFormatException e) {
+            // Xử lý nếu không thể chuyển đổi chuỗi thành số nguyên
+            System.out.println("Định dạng số không hợp lệ");
+        }
 
+        
         // Set panel properties
         infoPanel.setPreferredSize(new Dimension(150, 600));
         infoPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -1767,6 +1787,9 @@ public class ChessBoard extends JFrame implements ActionListener {
         // Add panel to the frame
         add(infoPanel, BorderLayout.EAST);
     }
+    
+    
+    
 
     private void bKing_run(int i, int j) {
         int m, n;

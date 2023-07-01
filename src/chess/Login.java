@@ -49,7 +49,8 @@ public class Login extends javax.swing.JFrame {
         jLabel5.setText("jLabel5");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(399, 600));
+        setPreferredSize(new java.awt.Dimension(400, 600));
+        setSize(new java.awt.Dimension(400, 600));
         getContentPane().setLayout(null);
 
         jLabel1.setBackground(new java.awt.Color(0, 0, 0));
@@ -92,9 +93,14 @@ public class Login extends javax.swing.JFrame {
         getContentPane().add(jLabel4);
         jLabel4.setBounds(43, 28, 37, 0);
 
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home.jpg"))); // NOI18N
         jLabel6.setText("jLabel6");
+        jLabel6.setMaximumSize(new java.awt.Dimension(400, 600));
+        jLabel6.setMinimumSize(new java.awt.Dimension(400, 600));
+        jLabel6.setPreferredSize(new java.awt.Dimension(400, 600));
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(-3, -4, 400, 520);
+        jLabel6.setBounds(0, 0, 400, 540);
+        jLabel6.getAccessibleContext().setAccessibleName("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
