@@ -14,6 +14,7 @@ import java.util.Scanner;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import chess.Sound;
 
 public class ChessBoard extends JFrame implements ActionListener {
 
@@ -34,7 +35,7 @@ public class ChessBoard extends JFrame implements ActionListener {
     int[][] fisrtb = new int[8][8];
     private boolean isClick;
     private boolean isClick2;
-
+    
     private void setClick(boolean isclick) {
         isClick = isclick;
     }
@@ -1672,7 +1673,7 @@ public class ChessBoard extends JFrame implements ActionListener {
                         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 1);
                         JTable table = new JTable(tableModel);
                         table.setRowHeight(55);
-                        Clock time = new Clock(0, 1, 30);
+                        Clock time = new Clock(0, 30, 0);
                         Timer timer = new Timer(1000, new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -1734,7 +1735,6 @@ public class ChessBoard extends JFrame implements ActionListener {
                                         public void actionPerformed(ActionEvent e) {
                                             // Mảng chứa danh sách các chức năng
                                             String[] options = {"Quay lại game", "luật chơi", "Tắt nhạc"};
-
                                             // Hiển thị hộp thoại lựa chọn chức năng
                                             int choice = JOptionPane.showOptionDialog(
                                                     null,// Cửa sổ cha, null để sử dụng cửa sổ mặc định
@@ -1758,11 +1758,14 @@ public class ChessBoard extends JFrame implements ActionListener {
                                                     luat.setVisible(true);
 
                                                 } else if (choice == 2) {
-                                                    JOptionPane.showMessageDialog(null, "Đã tắt nhạc", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                                                    String filepath = "C:\\Users\\84942\\Downloads\\bray.wav";
+                                                    Sound.PlayMusic(filepath,true);
                                                 }
                                             }
 
                                         }
+
+                                        
 
                                     });
                                     playerturn.add(button);
@@ -2717,5 +2720,8 @@ public class ChessBoard extends JFrame implements ActionListener {
 
     public static void main(String[] args) {
         new ChessBoard();
+        //String filepath = "C:\\Users\\84942\\Downloads\\bray.wav";
+        //Sound.PlayMusic(filepath,true);
+       
     }
 }

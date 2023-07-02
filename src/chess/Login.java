@@ -4,6 +4,7 @@
  */
 package chess;
 
+import static chess.Sound.PlayMusic;
 import javax.swing.JOptionPane;
 /**
  *
@@ -109,6 +110,7 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
         String userName;
         String passWord;
+        
         userName = this.jTextField1.getText();
         passWord = new String (this.jPasswordField1.getPassword());
         if(userName.equalsIgnoreCase("1") && passWord.equalsIgnoreCase("1")){
@@ -132,6 +134,8 @@ public class Login extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
+        String filepath = "C:\\Users\\84942\\Downloads\\bray.wav";
+        PlayMusic(filepath,true);
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
