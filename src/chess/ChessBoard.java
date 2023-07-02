@@ -1461,7 +1461,7 @@ public class ChessBoard extends JFrame implements ActionListener {
         }
 
         if (checkmateb[row2][col2] == 1 && bcandef == 0) {
-            
+
             int option = JOptionPane.showOptionDialog(null, "White win!!!", "ENDGAME", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"OK"}, null);
             //player1Wins = true;
             if (option == JOptionPane.OK_OPTION) {
@@ -1557,220 +1557,223 @@ public class ChessBoard extends JFrame implements ActionListener {
 
             // Hiển thị điểm số trong infoPanel
             for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 1; j++) {
-                // Add player labels
-                if (i == 0 && j == 0) {
-                    Object[][] data = {
-                        {"Score"},
-                        {player1Score}
+                for (int j = 0; j < 1; j++) {
+                    // Add player labels
+                    if (i == 0 && j == 0) {
+                        Object[][] data = {
+                            {"Score"},
+                            {player1Score}
 
-                    };
+                        };
 
-                    // Định danh cột
-                    String[] columnNames = {"Player 1"};
+                        // Định danh cột
+                        String[] columnNames = {"Player 1"};
 
-                    // Tạo một lớp AbstractTableModel tùy chỉnh
-                    AbstractTableModel model = new AbstractTableModel() {
-                        public int getColumnCount() {
-                            return columnNames.length;
-                        }
-
-                        public int getRowCount() {
-                            return data.length;
-                        }
-
-                        public Object getValueAt(int row, int col) {
-                            return data[row][col];
-                        }
-
-                        public String getColumnName(int col) {
-                            return columnNames[col];
-                        }
-
-                        public boolean isCellEditable(int row, int col) {
-                            return false; // Ngăn không cho người dùng chỉnh sửa dữ liệu
-                        }
-                    };
-
-                    // Tạo bảng với DefaultTableModel
-                    JTable table = new JTable(model);
-
-                    table.setRowHeight(55);
-
-                    // Căn chỉnh dữ liệu trong cột 1 về trung tâm
-                    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-                    centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
-                    table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-
-                    // Tăng kích cỡ chữ trong bảng
-                    Font font = table.getFont().deriveFont(Font.BOLD, 40); // Thiết lập font chữ và kích cỡ
-                    table.setFont(font);
-
-                    // Đặt bảng vào một thanh cuộn
-                    JScrollPane scrollPane = new JScrollPane(table);
-
-                    // Đặt thanh cuộn vào panel
-                    infoPanel.add(scrollPane);
-
-                }
-                if (i == 1 && j == 0) {
-                    Object[][] data = {
-                        {"Score"},
-                        {player2Score}
-
-                    };
-
-                    // Định danh cột
-                    String[] columnNames = {"Player 2"};
-
-                    AbstractTableModel model = new AbstractTableModel() {
-                        public int getColumnCount() {
-                            return columnNames.length;
-                        }
-
-                        public int getRowCount() {
-                            return data.length;
-                        }
-
-                        public Object getValueAt(int row, int col) {
-                            return data[row][col];
-                        }
-
-                        public String getColumnName(int col) {
-                            return columnNames[col];
-                        }
-
-                        public boolean isCellEditable(int row, int col) {
-                            return false; // Ngăn không cho người dùng chỉnh sửa dữ liệu
-                        }
-                    };
-
-                    // Tạo bảng với DefaultTableModel
-                    JTable table = new JTable(model);
-
-                    table.setRowHeight(55);
-
-                    // Căn chỉnh dữ liệu trong cột 1 về trung tâm
-                    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-                    centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
-                    table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-
-                    // Tăng kích cỡ chữ trong bảng
-                    Font font = table.getFont().deriveFont(Font.BOLD, 40); // Thiết lập font chữ và kích cỡ
-                    table.setFont(font);
-
-                    // Đặt bảng vào một thanh cuộn
-                    JScrollPane scrollPane = new JScrollPane(table);
-
-                    // Đặt thanh cuộn vào panel
-                    infoPanel.add(scrollPane);
-
-                }
-                // Add turn indicator
-                if (i == 2 && j == 0) {
-                  String[] columnNames = {"Thời gian"};
-    DefaultTableModel tableModel = new DefaultTableModel(columnNames, 1);
-    JTable table = new JTable(tableModel);
-    table.setRowHeight(55);
-    Clock time = new Clock(1, 0, 0);
-    time.decr();
-              
-    
-    
-    
-
-    // Cập nhật giá trị trong ô bảng
-    tableModel.setValueAt(time.toString(), 0, 0);
-
-    // Đặt bảng vào một thanh cuộn
-    JScrollPane scrollPane = new JScrollPane(table);
-
-    infoPanel.add(scrollPane);
-
-
-
-                }
-
-                if (i == 3 && j == 0) {
-                    // tạo nút home và undo
-                    JPanel playerturn = new JPanel(new GridLayout(1, 2));
-                    for (int a = 0; a < 1; a++) {
-                        for (int b = 0; b < 2; b++) {
-
-                            //tạo nút home và cài chức năng
-                            if (a == 0 && b == 0) {
-                                JButton homeButton = new JButton(); // Tạo nút "Quay lại"
-                                homeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/home.png")));
-                                homeButton.setBackground(Color.WHITE);
-                                homeButton.addActionListener(new ActionListener() {
-                                    public void actionPerformed(ActionEvent e) {
-                                        int option = JOptionPane.showOptionDialog(null, "Bạn có muốn tiếp tục?", "Lựa chọn", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
-
-                                        if (option == JOptionPane.YES_OPTION) {
-                                            return;
-                                        } else if (option == JOptionPane.NO_OPTION) {
-                                            Home mainscreen = new Home(); // Tạo một đối tượng Home
-                                            mainscreen.setVisible(true); // Hiển thị Home
-                                            dispose(); // Đóng DetailFrame hiện tại 
-
-                                        } else {
-                                            System.out.println("Bạn đã đóng hộp thoại");
-                                        }
-
-                                    }
-                                });
-                                playerturn.add(homeButton);
-
-                            } //tạo nút back và cài chức năng
-                            else if (a == 0 && b == 1) {
-                                JButton button = new JButton();
-                                button.setBackground(Color.WHITE);
-                                button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/new.png")));
-
-                                button.addActionListener(new ActionListener() {
-                                    public void actionPerformed(ActionEvent e) {
-                                        // Mảng chứa danh sách các chức năng
-                                        String[] options = {"Quay lại game", "luật chơi", "Tắt nhạc"};
-
-                                        // Hiển thị hộp thoại lựa chọn chức năng
-                                        int choice = JOptionPane.showOptionDialog(
-                                                null,// Cửa sổ cha, null để sử dụng cửa sổ mặc định
-                                                "Chọn một chức năng:", // Nội dung thông báo
-                                                "Lựa chọn chức năng", // Tiêu đề hộp thoại
-                                                JOptionPane.DEFAULT_OPTION, // Kiểu nút mặc định
-                                                JOptionPane.PLAIN_MESSAGE, // Kiểu thông báo
-                                                null, // Icon
-                                                options, // Mảng chứa các tùy chọn
-                                                options[0] // Tùy chọn mặc định
-                                        );
-
-                                        // Kiểm tra lựa chọn của người dùng
-                                        if (choice == 0) {
-                                            String selectedOption = options[choice];
-
-                                        } else {
-                                            if (choice == 1) {
-
-                                                rule luat = new rule();
-                                                luat.setVisible(true);
-
-                                            } else if (choice == 2) {
-                                                JOptionPane.showMessageDialog(null, "Đã tắt nhạc", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                                            }
-                                        }
-
-                                    }
-
-                                });
-                                playerturn.add(button);
+                        // Tạo một lớp AbstractTableModel tùy chỉnh
+                        AbstractTableModel model = new AbstractTableModel() {
+                            public int getColumnCount() {
+                                return columnNames.length;
                             }
 
-                            infoPanel.add(playerturn);
+                            public int getRowCount() {
+                                return data.length;
+                            }
+
+                            public Object getValueAt(int row, int col) {
+                                return data[row][col];
+                            }
+
+                            public String getColumnName(int col) {
+                                return columnNames[col];
+                            }
+
+                            public boolean isCellEditable(int row, int col) {
+                                return false; // Ngăn không cho người dùng chỉnh sửa dữ liệu
+                            }
+                        };
+
+                        // Tạo bảng với DefaultTableModel
+                        JTable table = new JTable(model);
+
+                        table.setRowHeight(55);
+
+                        // Căn chỉnh dữ liệu trong cột 1 về trung tâm
+                        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+                        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+                        table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+
+                        // Tăng kích cỡ chữ trong bảng
+                        Font font = table.getFont().deriveFont(Font.BOLD, 40); // Thiết lập font chữ và kích cỡ
+                        table.setFont(font);
+
+                        // Đặt bảng vào một thanh cuộn
+                        JScrollPane scrollPane = new JScrollPane(table);
+
+                        // Đặt thanh cuộn vào panel
+                        infoPanel.add(scrollPane);
+
+                    }
+                    if (i == 1 && j == 0) {
+                        Object[][] data = {
+                            {"Score"},
+                            {player2Score}
+
+                        };
+
+                        // Định danh cột
+                        String[] columnNames = {"Player 2"};
+
+                        AbstractTableModel model = new AbstractTableModel() {
+                            public int getColumnCount() {
+                                return columnNames.length;
+                            }
+
+                            public int getRowCount() {
+                                return data.length;
+                            }
+
+                            public Object getValueAt(int row, int col) {
+                                return data[row][col];
+                            }
+
+                            public String getColumnName(int col) {
+                                return columnNames[col];
+                            }
+
+                            public boolean isCellEditable(int row, int col) {
+                                return false; // Ngăn không cho người dùng chỉnh sửa dữ liệu
+                            }
+                        };
+
+                        // Tạo bảng với DefaultTableModel
+                        JTable table = new JTable(model);
+
+                        table.setRowHeight(55);
+
+                        // Căn chỉnh dữ liệu trong cột 1 về trung tâm
+                        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+                        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+                        table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+
+                        // Tăng kích cỡ chữ trong bảng
+                        Font font = table.getFont().deriveFont(Font.BOLD, 40); // Thiết lập font chữ và kích cỡ
+                        table.setFont(font);
+
+                        // Đặt bảng vào một thanh cuộn
+                        JScrollPane scrollPane = new JScrollPane(table);
+
+                        // Đặt thanh cuộn vào panel
+                        infoPanel.add(scrollPane);
+
+                    }
+                    // Add turn indicator
+                    if (i == 2 && j == 0) {
+                        String[] columnNames = {"Thời gian"};
+                        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 1);
+                        JTable table = new JTable(tableModel);
+                        table.setRowHeight(55);
+                        Clock time = new Clock(0, 1, 30);
+                        Timer timer = new Timer(1000, new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if (!time.outOfTime()) {
+                                    tableModel.setValueAt(time.toString(), 0, 0);
+                                    time.decr();
+                                } else {
+                                    ((Timer) e.getSource()).stop();
+                                }
+                            }
+                        });
+
+                        timer.start();
+
+                        // Đặt bảng vào một thanh cuộn
+                        JScrollPane scrollPane = new JScrollPane(table);
+
+                        infoPanel.add(scrollPane);
+
+                    }
+
+                    if (i == 3 && j == 0) {
+                        // tạo nút home và setting
+                        JPanel playerturn = new JPanel(new GridLayout(1, 2));
+                        for (int a = 0; a < 1; a++) {
+                            for (int b = 0; b < 2; b++) {
+
+                                //tạo nút home và cài chức năng
+                                if (a == 0 && b == 0) {
+                                    JButton homeButton = new JButton(); // Tạo nút "Quay lại"
+                                    homeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/home.png")));
+                                    homeButton.setBackground(Color.WHITE);
+                                    homeButton.addActionListener(new ActionListener() {
+                                        public void actionPerformed(ActionEvent e) {
+                                            int option = JOptionPane.showOptionDialog(null, "Bạn có muốn tiếp tục?", "Lựa chọn", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+
+                                            if (option == JOptionPane.YES_OPTION) {
+                                                return;
+                                            } else if (option == JOptionPane.NO_OPTION) {
+                                                Home mainscreen = new Home(); // Tạo một đối tượng Home
+                                                mainscreen.setVisible(true); // Hiển thị Home
+                                                dispose(); // Đóng DetailFrame hiện tại 
+
+                                            } else {
+                                                System.out.println("Bạn đã đóng hộp thoại");
+                                            }
+
+                                        }
+                                    });
+                                    playerturn.add(homeButton);
+
+                                } //tạo nút back và cài chức năng
+                                else if (a == 0 && b == 1) {
+                                    JButton button = new JButton();
+                                    button.setBackground(Color.WHITE);
+                                    button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/new.png")));
+
+                                    button.addActionListener(new ActionListener() {
+                                        public void actionPerformed(ActionEvent e) {
+                                            // Mảng chứa danh sách các chức năng
+                                            String[] options = {"Quay lại game", "luật chơi", "Tắt nhạc"};
+
+                                            // Hiển thị hộp thoại lựa chọn chức năng
+                                            int choice = JOptionPane.showOptionDialog(
+                                                    null,// Cửa sổ cha, null để sử dụng cửa sổ mặc định
+                                                    "Chọn một chức năng:", // Nội dung thông báo
+                                                    "Lựa chọn chức năng", // Tiêu đề hộp thoại
+                                                    JOptionPane.DEFAULT_OPTION, // Kiểu nút mặc định
+                                                    JOptionPane.PLAIN_MESSAGE, // Kiểu thông báo
+                                                    null, // Icon
+                                                    options, // Mảng chứa các tùy chọn
+                                                    options[0] // Tùy chọn mặc định
+                                            );
+
+                                            // Kiểm tra lựa chọn của người dùng
+                                            if (choice == 0) {
+                                                String selectedOption = options[choice];
+
+                                            } else {
+                                                if (choice == 1) {
+
+                                                    rule luat = new rule();
+                                                    luat.setVisible(true);
+
+                                                } else if (choice == 2) {
+                                                    JOptionPane.showMessageDialog(null, "Đã tắt nhạc", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                                                }
+                                            }
+
+                                        }
+
+                                    });
+                                    playerturn.add(button);
+                                }
+
+                                infoPanel.add(playerturn);
+                            }
                         }
                     }
                 }
             }
-        }
         } catch (IOException e) {
             // Xử lý nếu không thể đọc từ file
             System.out.println("Không thể đọc từ file");
@@ -1779,7 +1782,6 @@ public class ChessBoard extends JFrame implements ActionListener {
             System.out.println("Định dạng số không hợp lệ");
         }
 
-        
         // Set panel properties
         infoPanel.setPreferredSize(new Dimension(150, 600));
         infoPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -1787,9 +1789,6 @@ public class ChessBoard extends JFrame implements ActionListener {
         // Add panel to the frame
         add(infoPanel, BorderLayout.EAST);
     }
-    
-    
-    
 
     private void bKing_run(int i, int j) {
         int m, n;

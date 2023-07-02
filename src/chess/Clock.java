@@ -9,6 +9,9 @@ package chess;
  * @author Admin
  */
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
 public class Clock {
     private int hours;
     private int minutes;
@@ -23,27 +26,18 @@ public class Clock {
         return (hours == 0 && minutes == 0 && seconds == 0);
     }
     
-    public void decr() {
-        while (hours > 0 || minutes > 0 || seconds > 0) {
-            if (seconds > 0) {
-                seconds--;
-            } else {
-                if (minutes > 0) {
-                    minutes--;
-                    seconds = 59;
-                } else {
-                    if (hours > 0) {
-                        hours--;
-                        minutes = 59;
-                        seconds = 59;
-                    }
-                }
-            }
-           
-            
-            
-    }}
-
+   public void decr() {
+        if (this.minutes == 0 && this.seconds == 0) {
+            this.seconds = 59;
+            this.minutes = 59;
+            this.hours--;
+        } else if (this.seconds == 0) {
+            this.seconds = 59;
+            this.minutes--;
+        } else this.seconds--;
+    }
+    
+    
     public String toString() {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
