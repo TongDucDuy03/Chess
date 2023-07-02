@@ -1550,7 +1550,7 @@ public class ChessBoard extends JFrame implements ActionListener {
     private void initializeInfoPanel() {
         JPanel infoPanel = new JPanel(new GridLayout(4, 1));
         // Đọc điểm số từ file
-        try (Scanner scanner = new Scanner(new FileReader("ketqua.txt"))) {
+        try (Scanner scanner = new Scanner(new FileReader("src\\test\\ketqua.txt"))) {
             String scoreLine = scanner.nextLine();
             String[] scores = scoreLine.split("-");
             int player1Score = Integer.parseInt(scores[0].trim());
@@ -1779,7 +1779,9 @@ public class ChessBoard extends JFrame implements ActionListener {
             }
         } catch (IOException e) {
             // Xử lý nếu không thể đọc từ file
-            System.out.println("Không thể đọc từ file");
+            String errorMessage = e.getMessage();
+    System.out.println("An IOException occurred: " + errorMessage);
+            //System.out.println("Không thể đọc từ file");
         } catch (NumberFormatException e) {
             // Xử lý nếu không thể chuyển đổi chuỗi thành số nguyên
             System.out.println("Định dạng số không hợp lệ");

@@ -5,6 +5,14 @@
 package chess;
 
 import static chess.Sound.PlayMusic;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import javax.swing.JOptionPane;
 /**
  *
@@ -15,11 +23,112 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
+    File f = new File("src\\test");
+    int ln;
+    String userName,passWord;
     public Login() {
         initComponents();
         this.setLocationRelativeTo(this);
     }
+    
+    
+    void createFolder(){
+        if(!f.mkdirs()){
+            f.mkdirs();
+        }
+    }
+    
+    void readFile(){
+        try {
+            FileReader fr = new FileReader(f+ "\\logins.txt");
+            System.err.println("file exits");
+        }
+        catch(FileNotFoundException ex){
+            try {
+                FileWriter fw = new FileWriter(f+ "\\logins.txt");
+                System.out.println("file create");
+            }
+            catch(IOException ex1){
+                //Logger.getLogger(Login.class.getName()).log(Level.SEVERE,null,ex1);
+            }
+        }
+    }
+    void addData(String usr, String pswd){
+        try {
+            RandomAccessFile raf = new RandomAccessFile(f + "\\logins.txt", "rw");
+            for(int i =0;i<ln;i++){
+                raf.readLine();
+            }
+            raf.writeBytes("UserName:"+usr+"\r\n");
+            raf.writeBytes("PassWord:"+pswd+"\r\n");
+            raf.writeBytes("\r");
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+    }
+    void checkData(String usr, String pswd){
+        try {
+            RandomAccessFile raf = new RandomAccessFile(f + "\\logins.txt", "rw");
+            String line = raf.readLine();
+            for(int i =0;i<ln;i+=3){
+                userName = line.substring(9);
+                passWord = raf.readLine().substring(9);
+                if(usr.equals(userName)& pswd.equals(passWord)){
+                    new Home().setVisible(true);       
+                    dispose();//xoa trang trước
+                }
 
+                else if(i==(ln-2)){
+                    JOptionPane.showInternalMessageDialog(null,"sai tk/mk");
+                }
+                for(int k = 1;k<=1;k++){
+                    raf.readLine();
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+    }
+    
+    void countLines(){
+        try {
+            ln =1;
+            RandomAccessFile raf = new RandomAccessFile(f + "\\logins.txt", "rw");
+            for(int i =0;raf.readLine()!=null;i++){
+                ln++;
+            }
+            System.out.println("number line:"+ln);
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+    }
+    void logic(String usr, String pswd){
+        try {
+            RandomAccessFile raf = new RandomAccessFile(f + "\\logins.txt", "rw");
+            for(int i =0;i<ln;i+=2){
+                String forUser = raf.readLine().substring(9);
+                String forPass = raf.readLine().substring(9);
+                if(usr.equals(forUser)& pswd.equals(forPass)){
+                    new Home().setVisible(true);       
+                    dispose();//xoa trang trước
+                }
+                if(i==(ln-1)){
+                    JOptionPane.showInternalMessageDialog(null,"sai tk/mk");
+                }
+                raf.readLine();
+            }
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,14 +141,18 @@ public class Login extends javax.swing.JFrame {
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
         jLabel5 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        password = new javax.swing.JPasswordField();
+        tfpswd = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        tfusr = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
+        username2 = new javax.swing.JTextField();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
@@ -49,16 +162,29 @@ public class Login extends javax.swing.JFrame {
 
         jLabel5.setText("jLabel5");
 
+        jButton3.setText("jButton3");
+
+        password.setFont(new java.awt.Font("Segoe UI Emoji", 0, 20)); // NOI18N
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(400, 600));
         setSize(new java.awt.Dimension(400, 600));
         getContentPane().setLayout(null);
+
+        tfpswd.setFont(new java.awt.Font("Segoe UI Historic", 0, 20)); // NOI18N
+        tfpswd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfpswdActionPerformed(evt);
+            }
+        });
+        getContentPane().add(tfpswd);
+        tfpswd.setBounds(140, 220, 220, 40);
 
         jLabel1.setBackground(new java.awt.Color(0, 0, 0));
         jLabel1.setFont(new java.awt.Font("Showcard Gothic", 0, 40)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 62, 47));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Login");
+        jLabel1.setMaximumSize(new java.awt.Dimension(400, 600));
         getContentPane().add(jLabel1);
         jLabel1.setBounds(140, 40, 130, 60);
 
@@ -68,19 +194,11 @@ public class Login extends javax.swing.JFrame {
         getContentPane().add(jLabel2);
         jLabel2.setBounds(10, 150, 120, 25);
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI Historic", 0, 20)); // NOI18N
-        getContentPane().add(jTextField1);
-        jTextField1.setBounds(150, 140, 220, 40);
-
         jLabel3.setFont(new java.awt.Font("Showcard Gothic", 0, 20)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 0, 0));
         jLabel3.setText("Password");
         getContentPane().add(jLabel3);
         jLabel3.setBounds(10, 230, 110, 25);
-
-        jPasswordField1.setFont(new java.awt.Font("Segoe UI Emoji", 0, 20)); // NOI18N
-        getContentPane().add(jPasswordField1);
-        jPasswordField1.setBounds(150, 220, 220, 40);
 
         jButton1.setFont(new java.awt.Font("Showcard Gothic", 1, 20)); // NOI18N
         jButton1.setText("Login");
@@ -90,12 +208,31 @@ public class Login extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton1);
-        jButton1.setBounds(150, 300, 100, 40);
+        jButton1.setBounds(90, 300, 100, 40);
         getContentPane().add(jLabel4);
         jLabel4.setBounds(43, 28, 37, 0);
 
+        jButton2.setFont(new java.awt.Font("Showcard Gothic", 0, 18)); // NOI18N
+        jButton2.setText("REGISTER");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2);
+        jButton2.setBounds(220, 300, 120, 40);
+
+        tfusr.setFont(new java.awt.Font("Segoe UI Historic", 0, 20)); // NOI18N
+        tfusr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfusrActionPerformed(evt);
+            }
+        });
+        getContentPane().add(tfusr);
+        tfusr.setBounds(140, 140, 220, 40);
+
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home.jpg"))); // NOI18N
-        jLabel6.setText("jLabel6");
+        jLabel6.setText("REGISTER");
         jLabel6.setMaximumSize(new java.awt.Dimension(400, 600));
         jLabel6.setMinimumSize(new java.awt.Dimension(400, 600));
         jLabel6.setPreferredSize(new java.awt.Dimension(400, 600));
@@ -103,27 +240,60 @@ public class Login extends javax.swing.JFrame {
         jLabel6.setBounds(0, 0, 400, 540);
         jLabel6.getAccessibleContext().setAccessibleName("");
 
+        username2.setFont(new java.awt.Font("Segoe UI Historic", 0, 20)); // NOI18N
+        username2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                username2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(username2);
+        username2.setBounds(140, 140, 220, 40);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String userName;
-        String passWord;
         
-        userName = this.jTextField1.getText();
-        passWord = new String (this.jPasswordField1.getPassword());
-        if(userName.equalsIgnoreCase("1") && passWord.equalsIgnoreCase("1")){
-        new Home().setVisible(true);       
-        dispose();//xoa trang trước
-        }
-        else{
-            //JOptionPane.showMessageDialog(null, userName or password invalid);
-            JOptionPane.showMessageDialog(null, "Userame or Password are invalid","ERROR", HEIGHT);
-            this.jTextField1.setText("");
-            this.jPasswordField1.setText("");
-        }
+        readFile();
+        countLines();
+        logic(tfusr.getText(),tfpswd.getText());
+//        String userName;
+//        String passWord;
+//        
+//        userName = this.username.getText();
+//        passWord = new String (this.password.getPassword());
+//        if(userName.equalsIgnoreCase("1") && passWord.equalsIgnoreCase("1")){
+//        new Home().setVisible(true);       
+//        dispose();//xoa trang trước
+//        }
+//        else{
+//            //JOptionPane.showMessageDialog(null, userName or password invalid);
+//            JOptionPane.showMessageDialog(null, "Userame or Password are invalid","ERROR", HEIGHT);
+//            this.username.setText("");
+//            this.password.setText("");
+//        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        createFolder();
+        readFile();
+        countLines();
+        addData(tfusr.getText(),tfpswd.getText());
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void tfpswdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfpswdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfpswdActionPerformed
+
+    private void tfusrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfusrActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfusrActionPerformed
+
+    private void username2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_username2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_username2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -164,6 +334,8 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
     private javax.swing.JLabel jLabel1;
@@ -172,7 +344,9 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JPasswordField password;
+    private javax.swing.JTextField tfpswd;
+    private javax.swing.JTextField tfusr;
+    private javax.swing.JTextField username2;
     // End of variables declaration//GEN-END:variables
 }
